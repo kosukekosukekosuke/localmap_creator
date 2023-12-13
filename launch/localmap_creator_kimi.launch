@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="localmap_expansion" default="0.25"/>
+
+    <!-- scan2pcl -->
+    <!-- sub: /scan -->
+    <!-- pub: /cloud -->
+    <node pkg="localmap_creator" type="scan2pcl" name="scan2pcl">
+        <remap from="/scan" to="/ros_gym_sfm/scan"/>
+        <!-- <remap from="/cloud" to="/front_laser/cloud"/> -->
+    </node>
+
+    <!-- Create localmap -->
+    <!-- sub: /cloud -->
+    <!-- pub: /local_map -->
+    <!-- pub: /local_map/expand -->
+    <node pkg="localmap_creator" type="simple_localmap_creator" name="simple_localmap_creator">
+        <param name="width" value="18.0"/>
+        <param name="max_height" value="1.2"/>
+        <param name="min_height" value="0.0"/>
+        <param name="resolution" value="0.1"/>
+        <param name="leaf_size" value="0.1"/>
+        <param name="expand_radius" value="$(arg localmap_expansion)"/>
+        <!-- <remap from="/cloud" to="/front_laser/cloud"/> -->
+    </node>
+
+    <!-- tf -->
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_velodyne" args="0 0 0 0 0 0 base_link laser"/> -->
+</launch>
